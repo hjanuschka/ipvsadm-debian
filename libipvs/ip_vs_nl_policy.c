@@ -26,6 +26,8 @@ struct nla_policy ipvs_service_policy[IPVS_SVC_ATTR_MAX + 1] = {
 	[IPVS_SVC_ATTR_TIMEOUT]		= { .type = NLA_U32 },
 	[IPVS_SVC_ATTR_NETMASK]		= { .type = NLA_U32 },
 	[IPVS_SVC_ATTR_STATS]		= { .type = NLA_NESTED },
+    [IPVS_SVC_ATTR_PE_NAME]         = { .type = NLA_STRING,
+                        .maxlen = IP_VS_PENAME_MAXLEN},
 };
 
 struct nla_policy ipvs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {

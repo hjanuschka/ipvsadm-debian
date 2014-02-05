@@ -63,7 +63,8 @@ RPMBUILD = $(shell				\
 	fi )
 
 ifeq (,$(FORCE_GETOPT))
-LIB_SEARCH = /lib64 /usr/lib64 /usr/local/lib64 /lib /usr/lib /usr/local/lib
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+LIB_SEARCH = /lib64 /usr/lib64 /usr/local/lib64 /lib /usr/lib /usr/local/lib /usr/lib/$(DEB_HOST_MULTIARCH)
 POPT_LIB = $(shell for i in $(LIB_SEARCH); do \
   if [ -f $$i/libpopt.a ]; then \
     if nm $$i/libpopt.a | fgrep -q poptGetContext; then \
@@ -81,7 +82,8 @@ endif
 OBJS		= ipvsadm.o config_stream.o dynamic_array.o
 LIBS		= $(POPT_LIB)
 ifneq (0,$(HAVE_NL))
-LIBS		+= -lnl
+INCLUDE		+= $(shell pkg-config --cflags libnl-3.0 libnl-genl-3.0)
+LIBS		+= $(shell pkg-config --libs libnl-3.0 libnl-genl-3.0)
 endif
 DEFINES		= -DVERSION=\"$(VERSION)\" -DSCHEDULERS=\"$(SCHEDULERS)\" \
 		  -DPE_LIST=\"$(PE_LIST)\" $(POPT_DEFINE)
